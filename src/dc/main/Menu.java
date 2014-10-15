@@ -3,6 +3,7 @@ package dc.main;
 import java.util.ArrayList;
 
 import dc.character.Char;
+import dc.character.CharInventory;
 import dc.character.InventorySlot;
 import dc.character.Race;
 import dc.item.Item;
@@ -13,7 +14,7 @@ import dc.utils.*;
 public class Menu {
 
 	private static String direction[] = new String[] {"Corridor", "Corridor", "Corridor"};
-	private static Char player;
+	private static CharInventory player;
 	private static ArrayList<Char> enemy = new ArrayList<>();
 	
 	static Combat combat = new Combat();
@@ -30,20 +31,20 @@ public class Menu {
 		while(player == null) {
 			input = ConsoleReader.readString("Select");
 			if(input.matches("human")) {
-				player = new Char(name, Race.HUMAN);
+				player = new CharInventory(name, Race.HUMAN);
 				player.equipItem(new Item(new String("Ironsword"), ItemCategory.NORMAL, ItemTyp.SWORD, new Double(4)));
 				player.equipItem(new Item(new String("Leather Chestplate"), ItemCategory.NORMAL, ItemTyp.CHESTPLATE, new Double(4)));
 				player.equipItem(new Item(new String("Leather Pants"), ItemCategory.NORMAL, ItemTyp.LEGINS, new Double(4)));
 				player.addItem(new Item(new String("Leather Pants"), ItemCategory.NORMAL, ItemTyp.LEGINS, new Double(4)));
 			}
 			if(input.matches("elf")) {
-				player = new Char(name, Race.ELF);
+				player = new CharInventory(name, Race.ELF);
 			}
 			if(input.matches("ork")) {
-				player = new Char(name, Race.ORK);
+				player = new CharInventory(name, Race.ORK);
 			}
 			if(input.matches("dwarf")) {
-				player = new Char(name, Race.DWARF);
+				player = new CharInventory(name, Race.DWARF);
 			}
 			if(input.matches("^help.*")) {
 				Text.helpCreat(input);
@@ -85,7 +86,7 @@ public class Menu {
 					System.out.println(input);
 				}
 				if(input.matches(".*equip.*")) {
-					player.equipItem(input);
+					player.equipItemFromBag(input);
 					System.out.println(input);
 				}
 				if(input.matches(".*unequip.*")) {

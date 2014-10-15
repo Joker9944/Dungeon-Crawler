@@ -2,18 +2,13 @@ package dc.item;
 
 public class Item {
 
+	//TODO Implement Consumebels (Potions)
+	
 	private String name;
 	private String description = "lazors!! :<";
 	private ItemCategory category;
 	private ItemTyp typ;
 	private Double value;
-	
-	public Item(ItemCategory category, ItemTyp typ) {
-		this.name = "";
-		this.category = category;
-		this.typ = typ;
-		this.value = 0D;
-	}
 	
 	public Item(String name, ItemCategory category, ItemTyp typ, Double value) {
 		this.name = name;
