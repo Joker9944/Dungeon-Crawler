@@ -9,10 +9,26 @@ import dc.item.Item;
 
 public class CharInventory extends CharBag {
 
-	protected HashMap<InventorySlot, Optional<Item>> inventory = new HashMap<>();
+	//TODO Implement Item Restrictions
+	
+	protected HashMap<InventorySlot, Optional<Item>> inventory = new HashMap<InventorySlot, Optional<Item>>();
 	
 	public CharInventory(Race race) {
 		super(race);
+		inventory.put(InventorySlot.WEAPON, Optional.empty());
+		inventory.put(InventorySlot.HEAD, Optional.empty());
+		inventory.put(InventorySlot.CHEST, Optional.empty());
+		inventory.put(InventorySlot.HANDS, Optional.empty());
+		inventory.put(InventorySlot.LEGS, Optional.empty());
+	}
+	
+	public CharInventory(String name, Race race) {
+		super(name, race);
+		inventory.put(InventorySlot.WEAPON, Optional.empty());
+		inventory.put(InventorySlot.HEAD, Optional.empty());
+		inventory.put(InventorySlot.CHEST, Optional.empty());
+		inventory.put(InventorySlot.HANDS, Optional.empty());
+		inventory.put(InventorySlot.LEGS, Optional.empty());
 	}
 
 	public Boolean equipItemFromBag(final String input) {
@@ -27,12 +43,14 @@ public class CharInventory extends CharBag {
 		}
 	}
 	
-	public void equipItem(final Item item) {
+	public Boolean equipItem(final Item item) {
 		if(isSlotFree(item.getTyp().getSlotType(), inventory)) {
 			inventory.put(item.getTyp().getSlotType(), Optional.of(item));
+			return true;
 		}
 		else {
 			System.out.println("Error equipItem(final Item item)" + '\n' + "Slot is taken.");
+			return false;
 		}
 	}
 	
@@ -106,6 +124,7 @@ public class CharInventory extends CharBag {
 	
 	public Optional<Item> removeItemInventroy(final Item item) {
 		if(isItemInInventory(item, inventory.values())) {
+			inventory.put(item.getTyp().getSlotType(), Optional.empty());
 			return Optional.of(item);
 		}
 		else {
@@ -117,8 +136,10 @@ public class CharInventory extends CharBag {
 	// Tests
 	private Boolean isItemInInventory(final Item item, final Collection<Optional<Item>> items) {
 		for(Optional<Item> testItem: items) {
-			if(testItem.get() == item) {
-				return true;
+			if(testItem.isPresent()) {
+				if(testItem.get() == item) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -136,16 +157,17 @@ public class CharInventory extends CharBag {
 	
 	private Optional<Item> isStringItem(final String input, final Collection<Optional<Item>> items) {
 		for(Optional<Item> testItem: items) {
-			if(input.matches("(?i).*" + testItem.get().getName() + "?")) {
-				return testItem;
+			if(testItem.isPresent()) {
+				if(input.matches("(?i).*" + testItem.get().getName() + "?")) {
+					return testItem;
+				}
 			}
-			return Optional.empty();
 		}
 		return Optional.empty();
 	}
 	
 	private Boolean isSlotFree(final InventorySlot slot, final HashMap<InventorySlot, Optional<Item>> inventory) {
-		if(inventory.get(slot).isPresent()) {
+		if(!inventory.get(slot).isPresent()) {
 			return true;
 		}
 		return false;

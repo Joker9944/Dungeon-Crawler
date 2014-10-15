@@ -2,6 +2,7 @@ package dc.character;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
 import dc.item.Item;
 
 public class CharBag extends Char {
@@ -10,6 +11,10 @@ public class CharBag extends Char {
 	
 	public CharBag(Race race) {
 		super(race);
+	}
+	
+	public CharBag(String name, Race race) {
+		super(name, race);
 	}
 	
 	public void showBag() {
@@ -63,7 +68,7 @@ public class CharBag extends Char {
 	
 	// Tests
 	protected Boolean isBagFull(final ArrayList<Item> bag, Race race) {
-		if(bag.size()<=race.getMaxBagSlots()) {
+		if(bag.size()>=race.getMaxBagSlots()) {
 			return true;
 		}
 		else {
@@ -80,4 +85,11 @@ public class CharBag extends Char {
 		}
 		return Optional.empty();
 	}
+	
+	// Get and Set
+	public ArrayList<Item> getBag() {
+		return bag;
+	}
+	
+	
 }
