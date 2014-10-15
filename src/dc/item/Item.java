@@ -1,4 +1,4 @@
-package dc.main;
+package dc.item;
 
 public class Item {
 

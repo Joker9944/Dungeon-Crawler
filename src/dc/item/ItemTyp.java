@@ -1,4 +1,6 @@
-package dc.main;
+package dc.item;
+
+import dc.character.InventorySlot;
 
 public enum ItemTyp {
 

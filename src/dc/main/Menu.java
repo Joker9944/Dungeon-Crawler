@@ -2,6 +2,12 @@ package dc.main;
 
 import java.util.ArrayList;
 
+import dc.character.Char;
+import dc.character.InventorySlot;
+import dc.character.Race;
+import dc.item.Item;
+import dc.item.ItemCategory;
+import dc.item.ItemTyp;
 import dc.utils.*;
 
 public class Menu {

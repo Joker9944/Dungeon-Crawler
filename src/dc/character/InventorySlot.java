@@ -1,4 +1,4 @@
-package dc.main;
+package dc.character;
 
 public enum InventorySlot {
 	HEAD(),

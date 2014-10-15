@@ -1,8 +1,12 @@
-package dc.main;
+package dc.character;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
+import dc.item.Item;
+import dc.item.ItemCategory;
+import dc.item.ItemTyp;
 
 public class Char {
 

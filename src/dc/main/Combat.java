@@ -1,5 +1,7 @@
 package dc.main;
 
+import dc.character.Char;
+import dc.character.Race;
 import dc.utils.*;
 
 public class Combat {
@@ -15,7 +17,7 @@ public class Combat {
 			
 			
 			//init creeps
-			Char creep = new Char("slime");
+			Char creep = new Char(Race.ORK);
 			
 			
 			//initiative
