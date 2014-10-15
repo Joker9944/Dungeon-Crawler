@@ -1,7 +1,7 @@
 package dc.character;
 
 import java.util.ArrayList;
-
+import java.util.Optional;
 import dc.item.Item;
 
 public class CharBag extends Char {
@@ -34,20 +34,19 @@ public class CharBag extends Char {
 		}
 	}
 	
-	public Boolean removeItem(final String input) {
+	public Optional<Item> removeItem(final String input) {
 		if(!bag.isEmpty()) {
-			for(Item test: bag) {
-				if(testItemString(input, test.getName())) {
-					bag.remove(test);
-					return true;
-				}
+			Optional<Item> item = isStringItemInArrayList(input, bag);
+			if(item.isPresent()) {
+				bag.remove(item.get());
+				return item;
 			}
 			System.out.println("Error removeItem(final String input)" + '\n' + "Item not found.");
-			return false;
+			return Optional.empty();
 		}
 		else {
 			System.out.println("Error removeItem(final String input)" + '\n' + "Bag is already empty");
-			return false;
+			return Optional.empty();
 		}
 	}
 	
@@ -72,22 +71,13 @@ public class CharBag extends Char {
 		}
 	}
 	
-	protected Boolean testItemString(final String input, final String test) {
-		if(input.matches("(?i).*" + test + "?")) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
-	protected Item isItemInBag(final String input, final ArrayList<Item> bag) {
+	protected Optional<Item> isStringItemInArrayList(final String input, final ArrayList<Item> bag) {
 		for(Item item: bag) {
 			if(input.matches("(?i).*" + item.getName() + "?")) {
-				return item;
+				return Optional.of(item);
 			}
-			return null;
+			return Optional.empty();
 		}
-		return null;
+		return Optional.empty();
 	}
 }

@@ -2,105 +2,150 @@ package dc.character;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.Set;
 
 import dc.item.Item;
-import dc.item.ItemCategory;
-import dc.item.ItemTyp;
 
 public class CharInventory extends CharBag {
 
-	protected HashMap<InventorySlot, Item> inventory = new HashMap<>();
+	protected HashMap<InventorySlot, Optional<Item>> inventory = new HashMap<>();
 	
 	public CharInventory(Race race) {
 		super(race);
-		inventory.put(InventorySlot.HEAD, new Item(ItemCategory.LIGHT, ItemTyp.HELM));
-		inventory.put(InventorySlot.CHEST, new Item(ItemCategory.LIGHT, ItemTyp.CHESTPLATE));
-		inventory.put(InventorySlot.HANDS, new Item(ItemCategory.LIGHT, ItemTyp.GAUNTLETS));
-		inventory.put(InventorySlot.LEGS, new Item(ItemCategory.LIGHT, ItemTyp.LEGINS));
-		inventory.put(InventorySlot.WEAPON, new Item(ItemCategory.LIGHT, ItemTyp.DAGGER));
 	}
 
-	public Boolean equipItem(final String input) { //TODO Check für einfachere Lösung
-		Boolean err1 = true;
-		for(Item item: bag) {
-			if(testItemString(input, item.getName())) {
-				
-			}
-		}
-		
-		for(int a = 0; a < bag.size(); a++) {
-			if(input.matches(".*" + bag.get(a).getName() + "?")) {
-				equipItem(bag.get(a));
-				err1 = false;
-			}
-		}
-		if(err1) {
-			System.out.println("Error equipItem(final String item)" + '\n' + "Item not found.");
-		}
-	}
-	
-	public void unequipItem(final String input) {
-		if(!bag.isEmpty()) {
-			for(InventorySlot slot: inventory.keySet()) {
-				if(testString(input, slot.name())) {
-					unequipItem(slot);
-				}
-			}
-			for(Item item: inventory.values()) {
-				if(testString(input, item.getName())) {
-					unequipItem(inventory.get(item.getTyp().getSlotType()));
-				}
-			}
-			System.out.println("Error unequipItem(final String input)" + '\n' + "Item not found");
+	public Boolean equipItemFromBag(final String input) {
+		Optional<Item> item = isStringItemInArrayList(input, bag);
+		if(item.isPresent()) {
+			equipItem(item.get());
+			return true;
 		}
 		else {
-			System.out.println("Bag is full");
+			System.out.println("Error equipItem(final String item)" + '\n' + "Item not found.");
+			return false;
 		}
 	}
 	
 	public void equipItem(final Item item) {
-		if(testSlotFree(item.getTyp().getSlotType(), inventory)) {
-			inventory.put(item.getTyp().getSlotType(), item);
+		if(isSlotFree(item.getTyp().getSlotType(), inventory)) {
+			inventory.put(item.getTyp().getSlotType(), Optional.of(item));
 		}
 		else {
 			System.out.println("Error equipItem(final Item item)" + '\n' + "Slot is taken.");
 		}
 	}
 	
-	
-	
-	public void unequipItem(final InventorySlot slot) {
-		if(!testSlotFree(slot, inventory)) {
-			Item helpItem = inventory.get(slot);
-			inventory.put(slot, null);
-			bag.add(helpItem);
+	public Optional<Item> unequipItem(final String input) {
+		if(!isBagFull(bag, race)) {
+			Optional<InventorySlot> slot = isStringSlot(input, inventory.keySet());
+			if(slot.isPresent()) {
+				Optional<Item> item = unequipItem(slot.get());
+				if(!item.isPresent()) {
+					return item;
+				}
+				return Optional.empty();
+			}
+			Optional<Item> item = isStringItem(input, inventory.values());
+			if(item.isPresent()) {
+				item = unequipItem(item.get());
+				if(!item.isPresent()) {
+					return item;
+				}
+				return Optional.empty();
+			}
+			System.out.println("Error unequipItem(final String input)" + '\n' + "Item not found");
+			return Optional.empty();
 		}
 		else {
-			System.out.println("Error unequipItem(final InventorySlot slot)" + '\n' + "Slot es already empty.");
+			System.out.println("Bag is full");
+			return Optional.empty();
 		}
 	}
 	
-	public void unequipItem(final Item item) {
-		if(testItem(item, inventory.values())) {
-			unequipItem(item.getTyp().getSlotType());
+	public Optional<Item> unequipItem(final InventorySlot slot) {
+		if(!isSlotFree(slot, inventory)) {
+			Item helpItem = inventory.get(slot).get();
+			if(addItem(helpItem)) {
+				inventory.put(helpItem.getTyp().getSlotType(), Optional.empty());
+				return Optional.of(helpItem);
+			}
+			return Optional.empty();
+		}
+		else {
+			System.out.println("Error unequipItem(final InventorySlot slot)" + '\n' + "Slot es already empty.");
+			return Optional.empty();
+		}
+	}
+	
+	public Optional<Item> unequipItem(final Item item) {
+		if(isItemInInventory(item, inventory.values())) {
+			if(addItem(item)) {
+				inventory.put(item.getTyp().getSlotType(), Optional.empty());
+				return Optional.of(item);
+			}
+			return Optional.empty();
 		}
 		else {
 			System.out.println("Error unequipItem(final Item item)" + '\n' + "Item not found.");
+			return Optional.empty();
+		}
+	}
+	
+	public Optional<Item> removeItemInventroy(final InventorySlot slot) {
+		if(!isSlotFree(slot, inventory)) {
+			Item helpItem = inventory.get(slot).get();
+			inventory.put(helpItem.getTyp().getSlotType(), Optional.empty());
+			return Optional.of(helpItem);
+		}
+		else {
+			System.out.println("Error removeItemInventroy(final InventorySlot slot)" + '\n' + "Slot es already empty.");
+			return Optional.empty();
+		}
+	}
+	
+	public Optional<Item> removeItemInventroy(final Item item) {
+		if(isItemInInventory(item, inventory.values())) {
+			return Optional.of(item);
+		}
+		else {
+			System.out.println("Error removeItemInventroy(final Item item)" + '\n' + "Item not found.");
+			return Optional.empty();
 		}
 	}
 	
 	// Tests
-	private Boolean testItem(final Item item, final Collection<Item> collection) {
-		for(Item aitem: collection) {
-			if(aitem == item) {
+	private Boolean isItemInInventory(final Item item, final Collection<Optional<Item>> items) {
+		for(Optional<Item> testItem: items) {
+			if(testItem.get() == item) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private Boolean testSlotFree(final InventorySlot slot, final HashMap<InventorySlot, Item> inventory) {
-		if(inventory.get(slot) == null) {
+	private Optional<InventorySlot> isStringSlot(final String input, final Set<InventorySlot> slot) {
+		for(InventorySlot testSlot: slot) {
+			if(input.matches("(?i).*" + testSlot.name() + "?")) {
+				return Optional.of(testSlot);
+			}
+			return Optional.empty();
+		}
+		return Optional.empty();
+	}
+	
+	private Optional<Item> isStringItem(final String input, final Collection<Optional<Item>> items) {
+		for(Optional<Item> testItem: items) {
+			if(input.matches("(?i).*" + testItem.get().getName() + "?")) {
+				return testItem;
+			}
+			return Optional.empty();
+		}
+		return Optional.empty();
+	}
+	
+	private Boolean isSlotFree(final InventorySlot slot, final HashMap<InventorySlot, Optional<Item>> inventory) {
+		if(inventory.get(slot).isPresent()) {
 			return true;
 		}
 		return false;
@@ -108,7 +153,6 @@ public class CharInventory extends CharBag {
 	
 	// get and set
 	public Item getEquipedItem(InventorySlot slot) {
-		return inventory.get(slot);
+		return inventory.get(slot).get();
 	}
-	
 }
