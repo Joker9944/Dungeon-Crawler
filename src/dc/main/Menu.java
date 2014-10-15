@@ -1,6 +1,8 @@
 package dc.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import dc.character.Char;
 import dc.character.CharInventory;
@@ -13,11 +15,10 @@ import dc.utils.*;
 
 public class Menu {
 
-	private static String direction[] = new String[] {"Corridor", "Corridor", "Corridor"};
+	private static Direction direction[] = new Direction[] {Direction.CORRIDOR, Direction.CORRIDOR, Direction.CORRIDOR};
 	private static CharInventory player;
-	private static ArrayList<Char> enemy = new ArrayList<>();
 	
-	static Combat combat = new Combat();
+	static Encounter encounter;
 	
 	public static void main(String[] args) {
 		String input;
@@ -30,21 +31,10 @@ public class Menu {
 		System.out.println("Choose your race.");
 		while(player == null) {
 			input = ConsoleReader.readString("Select");
-			if(input.matches("human")) {
-				player = new CharInventory(name, Race.HUMAN);
-				player.equipItem(new Item(new String("Ironsword"), ItemCategory.NORMAL, ItemTyp.SWORD, new Double(4)));
-				player.equipItem(new Item(new String("Leather Chestplate"), ItemCategory.NORMAL, ItemTyp.CHESTPLATE, new Double(4)));
-				player.equipItem(new Item(new String("Leather Pants"), ItemCategory.NORMAL, ItemTyp.LEGINS, new Double(4)));
-				player.addItem(new Item(new String("Leather Pants"), ItemCategory.NORMAL, ItemTyp.LEGINS, new Double(4)));
-			}
-			if(input.matches("elf")) {
-				player = new CharInventory(name, Race.ELF);
-			}
-			if(input.matches("ork")) {
-				player = new CharInventory(name, Race.ORK);
-			}
-			if(input.matches("dwarf")) {
-				player = new CharInventory(name, Race.DWARF);
+			for (Race race: Race.values()) {
+				if(input.matches("(?i)^" + race.getRace() + "?")) {
+					player = new CharInventory(name, race);
+				}
 			}
 			if(input.matches("^help.*")) {
 				Text.helpCreat(input);
@@ -62,8 +52,15 @@ public class Menu {
 				}
 				if(input.matches(".*wall?")) {
 					System.out.println("You can't go that way.");
+					
 				}
-				if(input.matches(".*corridor?")) {
+				for(Direction dire: Direction.values()) {
+					if(input.matches(".*" + dire.getName())) {
+						encounterCalc(dire.getChanche(), dire.getName());
+						setNewDirections();
+					}
+				}
+				/*if(input.matches(".*corridor?")) {
 					combat.encounter(5, false, "corridor", player);
 					setNewDirections();
 				}
@@ -74,7 +71,7 @@ public class Menu {
 				if(input.matches(".*chest?")) {
 					combat.encounter(30, false, "chest", player);
 					setNewDirections();
-				}
+				}*/
 			}
 			// Bag / Inventory
 			if(input.matches("^bag.*|^bag")) {
@@ -97,7 +94,7 @@ public class Menu {
 			// Rest
 			if(input.matches("^rest")) {
 				if(RandomGenerator.randomInteger(0, 100) <= 30) {
-					combat.encounter(0, true, "Rest", player);
+					encounterCalc(100, "Rest");
 				}
 				else {
 					int t;
@@ -114,7 +111,7 @@ public class Menu {
 			if(input.matches("^search")) {
 				Integer i = RandomGenerator.randomInteger(0, 100);
 				if(i >= 0 && i <= 80) {
-					Text.move(direction);
+					//Text.move(direction);
 				}
 				if(i >= 81 && i <= 95) {
 					combat.encounter(0, true, "Search", player);
@@ -153,33 +150,40 @@ public class Menu {
 			for(int i = 0; i < 3; i++) {
 				switch(RandomGenerator.randomInteger(0, 3)) {
 				case 0:
-					direction[i] = "Wall";
+					direction[i] = Direction.WALL;
 					break;
 
 				case 1:
-					direction[i] = "Corridor";
+					direction[i] = Direction.CORRIDOR;
 					break;
 
 				case 2:
-					direction[i] = "Door";
+					direction[i] = Direction.DOOR;
 					break;
 
 				case 3:
-					direction[i] = "Chest";
+					direction[i] = Direction.CHEST;
 					break;
 
 				default:
 					break;
 				}
 			}
-		} while(direction[0] != "Wall" || direction[1] != "Wall"|| direction[2] != "Wall");
+		} while(direction[0] != Direction.WALL|| direction[1] != Direction.WALL|| direction[2] != Direction.WALL);
+	}
+	
+	private static Boolean encounterCalc(Integer chanche, String location) {
+		if(RandomGenerator.randomInteger(0, 100) <= chanche) {
+			encounter = new Encounter(location, player);
+			return true;
+		}
+		else{
+			//No Encountermassage
+			return false;
+		}
 	}
 
-	public static Char getPlayer() {
+	public static CharInventory getPlayer() {
 		return player;
-	}
-
-	public static ArrayList<Char> getEnemy() {
-		return enemy;
 	}
 }
