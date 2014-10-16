@@ -7,18 +7,19 @@ import java.util.List;
 import dc.item.ItemCategory;
 import dc.item.ItemTyp;
 
-enum RaceBag {
+enum RacePlayer {
 
-	MERCENARY(Race.MERCENARY, true, 6, 5, EnumSet.of(ItemCategory.NORMAL), EnumSet.of(ItemTyp.SWORD, ItemTyp.BOW));
+	HUMAN(Race.HUMAN, 6, EnumSet.of(ItemCategory.NORMAL), EnumSet.of(ItemTyp.SWORD, ItemTyp.DAGGER, ItemTyp.BOW)),
+	ELF(Race.ELF, 6, EnumSet.of(ItemCategory.LIGHT), EnumSet.of(ItemTyp.DAGGER, ItemTyp.BOW)),
+	ORK(Race.ORK, 6, EnumSet.of(ItemCategory.HEAVY), EnumSet.of(ItemTyp.SWORD, ItemTyp.AXE, ItemTyp.BOW)),
+	DWARF(Race.DWARF, 6, EnumSet.of(ItemCategory.HEAVY), EnumSet.of(ItemTyp.SWORD, ItemTyp.AXE));
 	
 	private Race owner;
-	private Boolean hasName;
 	private Integer maxBagSlots;
-	private Integer unitCost;
 	private EnumSet<ItemCategory> usableCategorys;
 	private EnumSet<ItemTyp> usableTyps;
 	
-	private RaceBag(Race owner, Boolean hasName, Integer maxBagSlots, Integer unitCost, EnumSet<ItemCategory> usableCategorys, EnumSet<ItemTyp> usableTyps) {
+	private RacePlayer(Race owner, Integer maxBagSlots, EnumSet<ItemCategory> usableCategorys, EnumSet<ItemTyp> usableTyps) {
 		this.owner = owner;
 		this.maxBagSlots = maxBagSlots;
 		this.usableCategorys = usableCategorys;
@@ -28,17 +29,9 @@ enum RaceBag {
 	public Race getOwner() {
 		return owner;
 	}
-	
-	public Boolean getHasName() {
-		return hasName;
-	}
 
 	public Integer getMaxBagSlots() {
 		return maxBagSlots;
-	}
-	
-	public Integer getUnitCost() {
-		return unitCost;
 	}
 
 	@Deprecated

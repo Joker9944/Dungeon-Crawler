@@ -11,20 +11,31 @@ enum RaceInventory {
 
 	//TODO Loottable
 	
-	GOBLIN(Race.GOBLIN, EnumSet.of(ItemCategory.NORMAL), EnumSet.of(ItemTyp.SWORD, ItemTyp.DAGGER, ItemTyp.BOW));
+	GOBLIN(Race.GOBLIN, false, 3, EnumSet.of(ItemCategory.NORMAL), EnumSet.of(ItemTyp.SWORD, ItemTyp.DAGGER, ItemTyp.BOW));
 	
 	private Race owner;
+	private Boolean hasName;
+	private Integer unitCost;
 	private EnumSet<ItemCategory> usableCategorys;
 	private EnumSet<ItemTyp> usableTyps;
 	
-	private RaceInventory(Race owner, EnumSet<ItemCategory> usableCategorys, EnumSet<ItemTyp> usableTyps) {
+	private RaceInventory(Race owner, Boolean hasName, Integer unitCost, EnumSet<ItemCategory> usableCategorys, EnumSet<ItemTyp> usableTyps) {
 		this.owner = owner;
+		this.unitCost = unitCost;
 		this.usableCategorys = usableCategorys;
 		this.usableTyps = usableTyps;
 	}
 
 	public Race getOwner() {
 		return owner;
+	}
+	
+	public Boolean getHasName() {
+		return hasName;
+	}
+	
+	public Integer getUnitCost() {
+		return unitCost;
 	}
 
 	@Deprecated

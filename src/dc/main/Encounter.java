@@ -1,10 +1,12 @@
 package dc.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import dc.character.Char;
 import dc.character.Race;
-import dc.utils.*;
+import dc.utils.RandomGenerator;
 
 abstract class Encounter {
 
@@ -17,7 +19,7 @@ abstract class Encounter {
 		// Initiative
 		turn = initiative(location);
 		// Init enemy
-		enemy = enemy(location, player);
+		enemy = generateEnemys(location, player);
 		// Text encounter
 		//TODO Text.java
 		/*while (player.getHP() > 0 && creep.getHP() > 0) {
@@ -70,11 +72,23 @@ abstract class Encounter {
 		}
 	}
 	
-	private static ArrayList<Char> enemy(Location location, Char player) {
+	private static ArrayList<Char> generateEnemys(Location location, Char player) {
 		ArrayList<Char> enemys = new ArrayList<Char>();
-		
-		
-		
+		ArrayList<Race> race = new HashSet<Race>();
+		Integer unitResource = 10;
+		for(Race aRace: race) {
+			if(aRace.isPlayerRace()) {
+				race.remove(aRace);
+			}
+		}
+		while(unitResource > 0) {
+			Race helpRace = race.get(RandomGenerator.randomInteger(0, race.size()));
+			if(unitResource - helpRace.getUnitCost() > 0) {
+				if(help)
+				enemys.add(Race.getNewChar(helpRace));
+				unitResource = unitResource - helpRace.getUnitCost();
+			}
+		}
 		return enemys;
 	}
 

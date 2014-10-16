@@ -70,9 +70,28 @@ public enum Race {
 	public Boolean getClm() {
 		return clm;
 	}
+
+	public RaceSuffix getSuffix() {
+		return suffix;
+	}
+	
+	public Boolean isPlayerRace() {
+		if(suffix == RaceSuffix.PLAYER) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public Integer getMaxBagSlots() {
-		if(suffix == RaceSuffix.BAG||suffix == RaceSuffix.PLAYER) {
+		if(suffix == RaceSuffix.PLAYER) {
+			for(RacePlayer character: RacePlayer.values()) {
+				if(character.name().matches(this.name())) {
+					return character.getMaxBagSlots();
+				}
+			}
+		}
+		if(suffix == RaceSuffix.BAG) {
 			for(RaceBag character: RaceBag.values()) {
 				if(character.name().matches(this.name())) {
 					return character.getMaxBagSlots();
@@ -83,7 +102,14 @@ public enum Race {
 	}
 	
 	public ArrayList<Object> getUsableItems() {
-		if(suffix == RaceSuffix.BAG||suffix == RaceSuffix.PLAYER) {
+		if(suffix == RaceSuffix.PLAYER) {
+			for(RacePlayer race: RacePlayer.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUsableItems();
+				}
+			}
+		}
+		if(suffix == RaceSuffix.BAG) {
 			for(RaceBag race: RaceBag.values()) {
 				if(race.name().matches(this.name())) {
 					return race.getUsableItems();
@@ -94,6 +120,31 @@ public enum Race {
 			for(RaceInventory race: RaceInventory.values()) {
 				if(race.name().matches(this.name())) {
 					return race.getUsableItems();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public Integer getUnitCost() {
+		if(suffix == RaceSuffix.BAG) {
+			for(RaceBag race: RaceBag.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUnitCost();
+				}
+			}
+		}
+		if(suffix == RaceSuffix.INVENTORY) {
+			for(RaceInventory race: RaceInventory.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUnitCost();
+				}
+			}
+		}
+		if(suffix == RaceSuffix.BLANK) {
+			for(RaceBlank race: RaceBlank.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUnitCost();
 				}
 			}
 		}
