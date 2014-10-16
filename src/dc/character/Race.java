@@ -1,26 +1,58 @@
 package dc.character;
 
+import java.util.ArrayList;
+
 public enum Race {
 
-	HUMAN("HUMAN", 100, 100, true, 6, new String[] {"light", "normal", "sword", "dagger", "bow"}),
-	ELF("ELF", 50, 150, true, 6, new String [] {"light", "dagger", "bow"}),
-	ORK("ORK", 150, 50, true, 6, new String [] {"light", "normal", "heavy", "sword", "axe", "bow"}),
-	DWARF("DWARF", 200, 0, false, 6, new String [] {"light", "normal", "heavy", "sword", "axe"});
+	//Player Race
+	HUMAN("Human", 100, 100, true, RaceSuffix.PLAYER),
+	ELF("Elf", 50, 150, true, RaceSuffix.PLAYER),
+	ORK("Ork", 150, 50, true, RaceSuffix.PLAYER),
+	DWARF("Dwarf", 200, 0, false, RaceSuffix.PLAYER),
+	//Enemy Race
+	SPIDER("Spider", 50, 0, false, RaceSuffix.BLANK),
+	GOBLIN("Goblin", 70, 0, false, RaceSuffix.INVENTORY),
+	MERCENARY("Mercenary", 100, 0, false, RaceSuffix.BAG);
 	
+
 	private String race;
 	private Integer maxHP;
 	private Integer maxMP;
 	private Boolean clm;
-	private Integer maxBagSlots;
-	private String usableItems[];
+	private RaceSuffix suffix;
 	
-	private Race(String race, Integer maxHP, Integer maxMP, Boolean clm, Integer maxBagSlots, String usableItems[]) {
+	private Race(String race, Integer maxHP, Integer maxMP, Boolean clm, RaceSuffix suffix) {
 		this.race = race;
 		this.maxHP = maxHP;
 		this.maxMP = maxMP;
 		this.clm = clm;
-		this.maxBagSlots = maxBagSlots;
-		this.usableItems = usableItems;
+		this.suffix = suffix;
+	}
+	
+	public static Char getNewChar(Race race) {
+		if(race.suffix == RaceSuffix.BLANK) {
+			return new Char(race);
+		}
+		if(race.suffix == RaceSuffix.INVENTORY) {
+			return new CharInventory(race);
+		}
+		if(race.suffix == RaceSuffix.BAG||race.suffix == RaceSuffix.PLAYER) {
+			return new CharBag(race);
+		}
+		return null;
+	}
+	
+	public static Char getNewChar(String name, Race race) {
+		if(race.suffix == RaceSuffix.BLANK) {
+			return new Char(name, race);
+		}
+		if(race.suffix == RaceSuffix.INVENTORY) {
+			return new CharInventory(name, race);
+		}
+		if(race.suffix == RaceSuffix.BAG||race.suffix == RaceSuffix.PLAYER) {
+			return new CharBag(name, race);
+		}
+		return null;
 	}
 	
 	public String getRace() {
@@ -40,10 +72,31 @@ public enum Race {
 	}
 	
 	public Integer getMaxBagSlots() {
-		return maxBagSlots;
+		if(suffix == RaceSuffix.BAG||suffix == RaceSuffix.PLAYER) {
+			for(RaceBag character: RaceBag.values()) {
+				if(character.name().matches(this.name())) {
+					return character.getMaxBagSlots();
+				}
+			}
+		}
+		return null;
 	}
-
-	public String[] getUsableItems() {
-		return usableItems;
+	
+	public ArrayList<Object> getUsableItems() {
+		if(suffix == RaceSuffix.BAG||suffix == RaceSuffix.PLAYER) {
+			for(RaceBag race: RaceBag.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUsableItems();
+				}
+			}
+		}
+		if(suffix == RaceSuffix.INVENTORY) {
+			for(RaceInventory race: RaceInventory.values()) {
+				if(race.name().matches(this.name())) {
+					return race.getUsableItems();
+				}
+			}
+		}
+		return null;
 	}
 }

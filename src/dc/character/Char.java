@@ -7,11 +7,11 @@ public class Char {
 	protected Integer HP;
 	protected Integer MP;
 	
-	public Char(Race race) {
+	protected Char(Race race) {
 		creat(race.getRace(), race);
 	}
 	
-	public Char(String name, Race race) {
+	protected Char(String name, Race race) {
 		creat(name, race);
 	}
 	

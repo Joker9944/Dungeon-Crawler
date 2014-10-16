@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import dc.character.Char;
+import dc.character.CharBag;
 import dc.character.CharInventory;
 import dc.character.InventorySlot;
 import dc.character.Race;
+import dc.character.RaceSuffix;
 import dc.item.Item;
 import dc.item.ItemCategory;
 import dc.item.ItemTyp;
@@ -15,8 +17,8 @@ import dc.utils.*;
 
 public class Menu {
 
-	private static Direction direction[] = new Direction[] {Direction.CORRIDOR, Direction.CORRIDOR, Direction.CORRIDOR};
-	private static CharInventory player;
+	private static Location direction[] = new Location[] {Location.CORRIDOR, Location.CORRIDOR, Location.CORRIDOR};
+	private static CharBag player;
 	
 	static Encounter encounter;
 	
@@ -33,7 +35,7 @@ public class Menu {
 			input = ConsoleReader.readString("Select");
 			for (Race race: Race.values()) {
 				if(input.matches("(?i)^" + race.getRace() + "?")) {
-					player = new CharInventory(name, race);
+					player = (CharBag) Race.getNewChar(name, race);
 				}
 			}
 			if(input.matches("^help.*")) {
@@ -54,9 +56,9 @@ public class Menu {
 					System.out.println("You can't go that way.");
 					
 				}
-				for(Direction dire: Direction.values()) {
+				for(Location dire: Location.values()) {
 					if(input.matches(".*" + dire.getName())) {
-						encounterCalc(dire.getChanche(), dire.getName());
+						encounterCalc(dire.getChanche(), dire);
 						setNewDirections();
 					}
 				}
@@ -114,7 +116,7 @@ public class Menu {
 					//Text.move(direction);
 				}
 				if(i >= 81 && i <= 95) {
-					combat.encounter(0, true, "Search", player);
+					//TODOcombat.encounter(0, true, "Search", player);
 				}
 				if(i >= 96 && i <= 100) {
 					// loot
@@ -150,35 +152,35 @@ public class Menu {
 			for(int i = 0; i < 3; i++) {
 				switch(RandomGenerator.randomInteger(0, 3)) {
 				case 0:
-					direction[i] = Direction.WALL;
+					direction[i] = Location.WALL;
 					break;
 
 				case 1:
-					direction[i] = Direction.CORRIDOR;
+					direction[i] = Location.CORRIDOR;
 					break;
 
 				case 2:
-					direction[i] = Direction.DOOR;
+					direction[i] = Location.DOOR;
 					break;
 
 				case 3:
-					direction[i] = Direction.CHEST;
+					direction[i] = Location.CHEST;
 					break;
 
 				default:
 					break;
 				}
 			}
-		} while(direction[0] != Direction.WALL|| direction[1] != Direction.WALL|| direction[2] != Direction.WALL);
+		} while(direction[0] != Location.WALL|| direction[1] != Location.WALL|| direction[2] != Location.WALL);
 	}
 	
-	private static Boolean encounterCalc(Integer chanche, String location) {
+	private static Boolean encounterCalc(Integer chanche, Location location) {
 		if(RandomGenerator.randomInteger(0, 100) <= chanche) {
-			encounter = new Encounter(location, player);
+			Encounter.encounter(location, player);
 			return true;
 		}
 		else{
-			//No Encountermassage
+			
 			return false;
 		}
 	}

@@ -1,30 +1,26 @@
 package dc.main;
 
+import java.util.ArrayList;
+
 import dc.character.Char;
 import dc.character.Race;
 import dc.utils.*;
 
-public class Encounter {
-	
-	public Encounter(String location, Char player) {
-		encounter(location, player);
-	}
+abstract class Encounter {
 
-	public void encounter(String location, Char player) {
+	public static void encounter(Location location, Char player) {
+		String input;
 		Boolean turn;
 		// true=Player
 		// false=Creeps
-		String input;
-		// initiative
-
-		// init creeps
-		Char creep = new Char(Race.ORK);
-
-		// text encounter
-
-		turn = new Boolean(true);
-
-		while (player.getHP() > 0 && creep.getHP() > 0) {
+		ArrayList<Char> enemy;
+		// Initiative
+		turn = initiative(location);
+		// Init enemy
+		enemy = enemy(location, player);
+		// Text encounter
+		//TODO Text.java
+		/*while (player.getHP() > 0 && creep.getHP() > 0) {
 			if (turn == true) {
 				while (turn == true) {
 					input = ConsoleReader.readString("What will you do?");
@@ -60,12 +56,26 @@ public class Encounter {
 			} else {
 
 			}
-		}
+		}*/
 	}
 
-	private Integer iniative(String location) {
+	private static Boolean initiative(Location location) {
+		if(RandomGenerator.randomInteger(0, 100) > location.getInitiative()) {
+			// Player initiative
+			return true;
+		}
+		else{
+			// Enemy initative
+			return false;
+		}
+	}
+	
+	private static ArrayList<Char> enemy(Location location, Char player) {
+		ArrayList<Char> enemys = new ArrayList<Char>();
 		
-		return 0;
+		
+		
+		return enemys;
 	}
 
 	private void attack(Char attacker, String target, Char creep) {
@@ -76,7 +86,7 @@ public class Encounter {
 		}
 	}
 
-	private void attack(Char attacker, Char target) {
+	private static void attack(Char attacker, Char target) {
 
 	}
 }
