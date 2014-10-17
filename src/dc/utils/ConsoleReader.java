@@ -66,7 +66,7 @@ public abstract class ConsoleReader {
         {
             try
             {
-                System.out.print(prompt + " _>");
+                System.out.print(prompt + " :");
                 value = (char) reader.read();
                 // alternative	value = (char)reader.readLine().charAt(0);
                 break;
@@ -91,7 +91,7 @@ public abstract class ConsoleReader {
     public static double readDouble(String prompt)
     {
         double value = 0.0;
-        System.out.print(prompt + " _>");
+        System.out.print(prompt + " :");
         while (true)
         {
             try
@@ -126,7 +126,7 @@ public abstract class ConsoleReader {
         {
             try
             {
-                System.out.print(prompt + " _>");
+                System.out.print(prompt + " :");
                 value = Integer.valueOf(reader.readLine()).intValue();
                 break;
             }
@@ -158,7 +158,7 @@ public abstract class ConsoleReader {
         {
             try
             {
-                System.out.print(prompt + " _>");
+                System.out.print(prompt + " :");
                 value = Long.valueOf(reader.readLine()).longValue();
                 break;
             }
@@ -189,7 +189,7 @@ public abstract class ConsoleReader {
         {
             try
             {
-                System.out.print(prompt + " _>");
+                System.out.print(prompt + " :");
                 value = reader.readLine();
                 break;
             }

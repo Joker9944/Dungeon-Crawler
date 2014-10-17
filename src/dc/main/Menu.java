@@ -1,19 +1,13 @@
 package dc.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
-import dc.character.Char;
 import dc.character.CharBag;
-import dc.character.CharInventory;
 import dc.character.InventorySlot;
 import dc.character.Race;
-import dc.character.RaceSuffix;
 import dc.item.Item;
-import dc.item.ItemCategory;
-import dc.item.ItemTyp;
-import dc.utils.*;
+import dc.utils.ConsoleReader;
+import dc.utils.RandomGenerator;
 
 public class Menu {
 
@@ -36,115 +30,146 @@ public class Menu {
 			for (Race race: Race.values()) {
 				if(input.matches("(?i)^" + race.getRace() + "?")) {
 					player = (CharBag) Race.getNewChar(name, race);
+					for(Item item: player.getRace().getStartItems()) {
+						player.equipItem(item);
+					}
 				}
 			}
 			if(input.matches("^help.*")) {
 				Text.helpCreat(input);
 			}
 		}
-		player.setHP(player.getMaxHP());
-		player.setMP(player.getMaxMP());
+		player.setHP(player.getRace().getMaxHP());
+		player.setMP(player.getRace().getMaxMP());
 		System.out.println("Chracter created");
 		while (player.getHP() > 0) {
 			input = ConsoleReader.readString("Select");
 			// Move
-			if(input.matches("^move.*|^move")) {
-				if(input.matches("^move")) {
-					System.out.println("Enter Direction or objekt where you want to move to.");
-				}
-				if(input.matches(".*wall?")) {
-					System.out.println("You can't go that way.");
-					
-				}
-				for(Location dire: Location.values()) {
-					if(input.matches(".*" + dire.getName())) {
-						encounterCalc(dire.getChanche(), dire);
-						setNewDirections();
-					}
-				}
-				/*if(input.matches(".*corridor?")) {
-					combat.encounter(5, false, "corridor", player);
-					setNewDirections();
-				}
-				if(input.matches(".*door?")) {
-					combat.encounter(50, false, "door", player);
-					setNewDirections();
-				}
-				if(input.matches(".*chest?")) {
-					combat.encounter(30, false, "chest", player);
-					setNewDirections();
-				}*/
-			}
-			// Bag / Inventory
-			if(input.matches("^bag.*|^bag")) {
-				if(input.matches(".*show?|^bag")) {
-					player.showBag();
-				}
-				if(input.matches(".*drop.*")) {
-					player.removeItem(input);
-					System.out.println(input);
-				}
-				if(input.matches(".*equip.*")) {
-					player.equipItemFromBag(input);
-					System.out.println(input);
-				}
-				if(input.matches(".*unequip.*")) {
-					player.unequipItem(input);
-					System.out.println(input);
-				}
-			}
+			move(input);
+			// Bag
+			bag(input);
 			// Rest
-			if(input.matches("^rest")) {
-				if(RandomGenerator.randomInteger(0, 100) <= 30) {
-					encounterCalc(100, "Rest");
-				}
-				else {
-					int t;
-					int m;
-					t = ((player.getMaxHP() - player.getHP()) / 3);
-					m = ((player.getMaxMP() - player.getMP()) / 5);
-					player.setHP(player.getHP() + t);
-					player.setMP(player.getMP() + t);
-					System.out.println("You have restet and restort " + t + " TP and "
-							+ m + " MP.");
-				}
-			}
+			rest(input);
 			// Search
-			if(input.matches("^search")) {
-				Integer i = RandomGenerator.randomInteger(0, 100);
-				if(i >= 0 && i <= 80) {
-					//Text.move(direction);
-				}
-				if(i >= 81 && i <= 95) {
-					//TODOcombat.encounter(0, true, "Search", player);
-				}
-				if(i >= 96 && i <= 100) {
-					// loot
-				}
-			}
+			search(input);
 			// Status
-			if(input.matches("^status")) {
-				System.out.println(player.getName());
-				System.out.println(player.getRace().getRace());
-				System.out.println("HP: " + player.getHP());
-				if(player.getClm()==true) {
-					System.out.println("MP: " + player.getMP());
-				}
-				System.out.println('\n' + "Equipment:" + '\n');
-				InventorySlot ausgabe[] = new InventorySlot[] {InventorySlot.WEAPON, InventorySlot.HEAD, InventorySlot.CHEST, InventorySlot.HANDS, InventorySlot.LEGS};
-				Item helpItem;
-				for(Integer i = 0; i < 5; i++) {
-					helpItem = player.getEquipedItem(ausgabe[i]);
-					if(helpItem != null) {
-						System.out.println(helpItem.getName() + '\n' + "Value: " + helpItem.getValue());
-					}
-				}
-			}
+			status(input);
 			// help
 			if(input.matches("^help.*|^help")) {
 				Text.helpMenu(input);
 			}
 		}
+	}
+	
+	private static Boolean move(String input) {
+		if(input.matches("^move.*|^move")) {
+			if(input.matches("^move")) {
+				System.out.println("Enter Direction or objekt where you want to move to.");
+				return true;
+			}
+			if(input.matches(".*wall?")) {
+				System.out.println("You can't go that way.");
+				return true;
+				
+			}
+			for(Location direction: Location.values()) {
+				if(input.matches(".*" + direction)) {
+					encounterCalc(direction);
+					setNewDirections();
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	protected static Boolean bag(String input) {
+		if(input.matches("^bag.*|^bag")) {
+			if(input.matches(".*show?|^bag")) {
+				player.showBag();
+				return true;
+			}
+			if(input.matches(".*drop.*")) {
+				player.removeItem(input);
+				System.out.println(input);
+				return true;
+			}
+			if(input.matches(".*equip.*")) {
+				player.equipItemFromBag(input);
+				System.out.println(input);
+				return true;
+			}
+			if(input.matches(".*unequip.*")) {
+				player.unequipItem(input);
+				System.out.println(input);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static Boolean rest(String input) {
+		if(input.matches("^rest")) {
+			if(RandomGenerator.randomInteger(0, 100) <= 30) {
+				//TODOencounterCalc(100, "Rest");
+			}
+			else {
+				Double t;
+				Double m;
+				t = ((player.getRace().getMaxHP() - player.getHP()) / 3D);
+				m = ((player.getRace().getMaxMP() - player.getMP()) / 5D);
+				player.setHP(player.getHP() + t);
+				player.setMP(player.getMP() + t);
+				System.out.println("You have restet and restort " + t + " TP and "
+						+ m + " MP.");
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	private static Boolean search(String input) {
+		if(input.matches("^search")) {
+			Integer i = RandomGenerator.randomInteger(0, 100);
+			if(i >= 0 && i <= 80) {
+				Text.move(direction);
+			}
+			if(i >= 81 && i <= 95) {
+				Encounter.encounter(Location.CORRIDOR, player);
+			}
+			if(i >= 96 && i <= 100) {
+				//TODO loot
+				System.out.println("Loot");
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	protected static Boolean status(String input) {
+		if(input.matches("^status")) {
+			System.out.println(player.getName());
+			System.out.println(player.getRace().getRace());
+			System.out.println("HP: " + player.getHP());
+			if(player.getClm().equals(true)) {
+				System.out.println("MP: " + player.getMP());
+			}
+			//TODO No equiment when nothing equiped
+			System.out.println('\n' + "Equipment:");
+			for(InventorySlot slot: InventorySlot.values()) {
+				Optional<Item> helpContainer = player.getEquipedItem(slot);
+				if(helpContainer.isPresent()) {
+					System.out.println(helpContainer.get().getName());
+					if(slot.equals(InventorySlot.WEAPON)) {
+						System.out.println("Damage: " + helpContainer.get().getValue());
+					} else {
+						System.out.println("Armor: " + helpContainer.get().getValue());
+					}
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	private static void setNewDirections() {
@@ -174,8 +199,8 @@ public class Menu {
 		} while(direction[0] != Location.WALL|| direction[1] != Location.WALL|| direction[2] != Location.WALL);
 	}
 	
-	private static Boolean encounterCalc(Integer chanche, Location location) {
-		if(RandomGenerator.randomInteger(0, 100) <= chanche) {
+	private static Boolean encounterCalc(Location location) {
+		if(RandomGenerator.randomInteger(0, 100) <= location.getChanche()) {
 			Encounter.encounter(location, player);
 			return true;
 		}
@@ -183,9 +208,5 @@ public class Menu {
 			
 			return false;
 		}
-	}
-
-	public static CharInventory getPlayer() {
-		return player;
 	}
 }

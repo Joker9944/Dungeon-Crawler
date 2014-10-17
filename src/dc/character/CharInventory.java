@@ -13,15 +13,6 @@ public class CharInventory extends Char {
 	
 	protected HashMap<InventorySlot, Optional<Item>> inventory = new HashMap<InventorySlot, Optional<Item>>();
 	
-	protected CharInventory(Race race) {
-		super(race);
-		inventory.put(InventorySlot.WEAPON, Optional.empty());
-		inventory.put(InventorySlot.HEAD, Optional.empty());
-		inventory.put(InventorySlot.CHEST, Optional.empty());
-		inventory.put(InventorySlot.HANDS, Optional.empty());
-		inventory.put(InventorySlot.LEGS, Optional.empty());
-	}
-	
 	protected CharInventory(String name, Race race) {
 		super(name, race);
 		inventory.put(InventorySlot.WEAPON, Optional.empty());
@@ -107,7 +98,17 @@ public class CharInventory extends Char {
 	}
 	
 	// get and set
-	public Item getEquipedItem(InventorySlot slot) {
-		return inventory.get(slot).get();
+	public Optional<Item> getEquipedItem(InventorySlot slot) {
+		return inventory.get(slot);
+	}
+	
+	public Double getArmor() {
+		Double armor = 0D;
+		for(InventorySlot slot: InventorySlot.values()) {
+			if(getEquipedItem(slot).isPresent()) {
+				armor = armor + getEquipedItem(slot).get().getValue();
+			}
+		}
+		return armor;
 	}
 }

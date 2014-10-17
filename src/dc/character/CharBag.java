@@ -9,10 +9,6 @@ public class CharBag extends CharInventory {
 
 	protected ArrayList<Item> bag = new ArrayList<>();
 	
-	protected CharBag(Race race) {
-		super(race);
-	}
-	
 	protected CharBag(String name, Race race) {
 		super(name, race);
 	}

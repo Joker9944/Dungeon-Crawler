@@ -1,64 +1,64 @@
 package dc.main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Optional;
 
 import dc.character.Char;
+import dc.character.CharBag;
+import dc.character.CharInventory;
+import dc.character.InventorySlot;
 import dc.character.Race;
+import dc.character.RaceSuffix;
+import dc.item.Item;
+import dc.utils.ConsoleReader;
 import dc.utils.RandomGenerator;
 
-abstract class Encounter {
+public abstract class Encounter {
 
-	public static void encounter(Location location, Char player) {
-		String input;
-		Boolean turn;
-		// true=Player
-		// false=Creeps
-		ArrayList<Char> enemy;
+	private static String input;
+	private static Boolean turn;
+					// true=Player
+					// false=Creeps
+	private static ArrayList<Char> enemyList;
+	
+	public static void encounter(Location location, CharBag player) {
+		System.out.println("Encounter");
 		// Initiative
 		turn = initiative(location);
 		// Init enemy
-		enemy = generateEnemys(location, player);
+		enemyList = generateEnemys();
 		// Text encounter
 		//TODO Text.java
-		/*while (player.getHP() > 0 && creep.getHP() > 0) {
+		do {
 			if (turn == true) {
-				while (turn == true) {
-					input = ConsoleReader.readString("What will you do?");
-					if (input.matches("^attack.*") == true) {
-						if (input.matches("^attack")) {
-							System.out.println("Select a target.");
-						} else {
-							attack(player, input, creep);
+				input = ConsoleReader.readString("What will you do?");
+				if (input.matches("^attack.*")) {
+					// Attack
+					if(input.matches("^attack")) {
+						System.out.println("Select a target.");
+					} else {
+						if(attack(player, input)) {
+							turn = false;
 						}
-						turn = false;
 					}
-					if (input.matches("^spell.*") == true) {
-						// spells
-					}
-					if (input.matches("^bag.*") == true) {
-						// bag
-					}
-					if (input.matches("status") == true) {
-						// player info
-
-						// creep info
-						System.out.println(creep.getRace());
-						if (creep.getRace().getRace() == creep.getName()) {
-							System.out.println(creep.getName());
-						}
-						System.out.print('\n');
-					}
-					if (input.matches("flee") == true) {
-						Text.helpCreat(input);
-					}
-					turn = false;
+					// Bag
+					Menu.bag(input);
+					// Status
+					if(Menu.status(input)){statusExtension();}
+					// TODO Flee
 				}
 			} else {
-
+				for(Char enemy: enemyList) {
+					//TODO AI
+					attack(player, enemy);
+				}
 			}
-		}*/
+			for(Char enemy: enemyList) {
+				if(enemy.getHP() <= 0) {
+					enemyList.remove(enemy);
+				}
+			}
+		} while(player.getHP() > 0 && !enemyList.isEmpty());
 	}
 
 	private static Boolean initiative(Location location) {
@@ -72,35 +72,79 @@ abstract class Encounter {
 		}
 	}
 	
-	private static ArrayList<Char> generateEnemys(Location location, Char player) {
-		ArrayList<Char> enemys = new ArrayList<Char>();
-		ArrayList<Race> race = new HashSet<Race>();
+	private static ArrayList<Char> generateEnemys() {
+		ArrayList<Char> enemyList = new ArrayList<Char>();
+		ArrayList<Race> raceList = new ArrayList<Race>();
 		Integer unitResource = 10;
-		for(Race aRace: race) {
-			if(aRace.isPlayerRace()) {
-				race.remove(aRace);
+		for(Race race: Race.values()) {
+			if(!race.isPlayerRace()) {
+				raceList.add(race);
 			}
 		}
-		while(unitResource > 0) {
-			Race helpRace = race.get(RandomGenerator.randomInteger(0, race.size()));
-			if(unitResource - helpRace.getUnitCost() > 0) {
-				if(help)
-				enemys.add(Race.getNewChar(helpRace));
-				unitResource = unitResource - helpRace.getUnitCost();
+		while((unitResource > 0 || !raceList.isEmpty())) {
+			Race race = raceList.get(RandomGenerator.randomInteger(0, raceList.size() - 1));
+			if(unitResource - race.getUnitCost() > 0) {
+				if(race.getHasName()) {
+					//TODO EnemyNameList
+					enemyList.add(Race.getNewChar("test_name", race));
+				} else {
+					Integer count = 0;
+					if(!enemyList.isEmpty()) {
+						for(Char enemy: enemyList){
+							if(enemy.getName().matches("(?i)" + race.getRace() + ".*")) {
+								count++;
+							}
+						}
+					}
+					enemyList.add(Race.getNewChar(race.getRace() + " (" + (count + 1) + ")", race));
+				}
+				unitResource = unitResource - race.getUnitCost();
+			} else {
+				raceList.remove(race);
 			}
 		}
-		return enemys;
+		return enemyList;
 	}
-
-	private void attack(Char attacker, String target, Char creep) {
-		if (target.matches(".*" + creep.getName() + "?")) {
-			attack(attacker, creep);
-		} else {
-			System.out.println("Invalid target");
+	
+	public static void statusExtension() {
+		System.out.println('\n' + "Enemys:");
+		for(Char enemy: enemyList) {
+			System.out.println(enemy.getName());
 		}
+	}
+	
+	private static Boolean attack(Char attacker, String target) {
+		for(Char enemy: enemyList) {
+			if(target.matches("(?i).*" + enemy.getName() + "?")) {
+				attack(attacker, enemy);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static void attack(Char attacker, Char target) {
-
+		Double damage;
+		Double armor;
+		if(attacker.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
+			damage = attacker.getRace().getDamage();
+		} else {
+			Optional<Item> helpContainer = ((CharInventory) attacker).getEquipedItem(InventorySlot.WEAPON);
+			if(helpContainer.isPresent()) {
+				damage = helpContainer.get().getValue();
+			}
+			damage = 0D;
+		}
+		if(target.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
+			armor = target.getRace().getArmor();
+		} else {
+			armor = ((CharInventory) target).getArmor();
+		}
+		target.setHP(target.getHP() - DamageCalc(damage, armor));
+	}
+	
+	private static Double DamageCalc(Double damage, Double armor) {
+		//TODO Better system / balanching
+		return damage / armor;
 	}
 }

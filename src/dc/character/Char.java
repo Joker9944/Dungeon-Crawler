@@ -4,18 +4,10 @@ public class Char {
 
 	protected String name;
 	protected Race race;
-	protected Integer HP;
-	protected Integer MP;
-	
-	protected Char(Race race) {
-		creat(race.getRace(), race);
-	}
+	protected Double HP;
+	protected Double MP;
 	
 	protected Char(String name, Race race) {
-		creat(name, race);
-	}
-	
-	private void creat(String name, Race race) {
 		this.name = name;
 		this.race = race;
 		HP = race.getMaxHP();
@@ -31,27 +23,19 @@ public class Char {
 		return race;
 	}
 
-	public Integer getMaxHP() {
-		return race.getMaxHP();
-	}
-
-	public Integer getHP() {
+	public Double getHP() {
 		return HP;
 	}
 
-	public void setHP(Integer HP) {
+	public void setHP(Double HP) {
 		this.HP = HP;
 	}
-
-	public Integer getMaxMP() {
-		return race.getMaxMP();
-	}
 	
-	public Integer getMP() {
+	public Double getMP() {
 		return MP;
 	}
 
-	public void setMP(Integer MP) {
+	public void setMP(Double MP) {
 		this.MP = MP;
 	}
 

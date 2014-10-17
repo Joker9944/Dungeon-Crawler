@@ -2,8 +2,8 @@ package dc.main;
 
 public abstract class Text {
 
-	public static void move(String[] direction) {
-		System.out.println(direction[0] + '\n' + direction[1] + '\n' + direction[2]);
+	public static void move(Location[] location) {
+		System.out.println(location[0].getName() + '\n' + location[1].getName() + '\n' + location[2].getName());
 	}
 	
 	public static void helpMenu(String input) {
