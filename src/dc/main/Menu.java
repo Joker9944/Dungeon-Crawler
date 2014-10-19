@@ -3,7 +3,7 @@ package dc.main;
 import java.util.Optional;
 
 import dc.character.CharBag;
-import dc.character.InventorySlot;
+import dc.character.CharInventory;
 import dc.character.Race;
 import dc.item.Item;
 import dc.utils.ConsoleReader;
@@ -156,11 +156,11 @@ public class Menu {
 			}
 			//TODO No equiment when nothing equiped
 			System.out.println('\n' + "Equipment:");
-			for(InventorySlot slot: InventorySlot.values()) {
+			for(CharInventory.InventorySlot slot: CharInventory.InventorySlot.values()) {
 				Optional<Item> helpContainer = player.getEquipedItem(slot);
 				if(helpContainer.isPresent()) {
 					System.out.println(helpContainer.get().getName());
-					if(slot.equals(InventorySlot.WEAPON)) {
+					if(slot.equals(CharInventory.InventorySlot.WEAPON)) {
 						System.out.println("Damage: " + helpContainer.get().getValue());
 					} else {
 						System.out.println("Armor: " + helpContainer.get().getValue());

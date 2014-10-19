@@ -9,7 +9,5 @@ public class EncounterTest {
 
 	public static void main(String[] args) {
 		Encounter.encounter(Location.CORRIDOR, (CharBag) Race.getNewChar("test_char", Race.HUMAN));
-
 	}
-
 }

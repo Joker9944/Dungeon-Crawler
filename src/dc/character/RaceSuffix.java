@@ -2,7 +2,6 @@ package dc.character;
 
 import java.util.HashMap;
 
-
 public enum RaceSuffix {
 	PLAYER,		// For PlayerChar
 	BLANK,		// For Enemy

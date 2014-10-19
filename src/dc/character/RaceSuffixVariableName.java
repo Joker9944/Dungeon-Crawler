@@ -1,6 +1,5 @@
 package dc.character;
 
-
 enum RaceSuffixVariableName {
 	OWNER,				//Race
 	MAXBAGSLOTS,		//Integer

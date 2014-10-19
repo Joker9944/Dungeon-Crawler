@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import dc.character.CharBag;
-import dc.character.InventorySlot;
+import dc.character.CharInventory;
 import dc.character.Race;
 import dc.item.Item;
 import dc.item.ItemCategory;
@@ -63,7 +63,7 @@ public class CharBagTest {
 		if(!test.equipItemFromBag("test_sword")) {
 			fail("false was not expected");
 		}
-		System.out.println(test.getEquipedItem(InventorySlot.WEAPON).getName());
+		System.out.println(test.getEquipedItem(CharInventory.InventorySlot.WEAPON).get().getName());
 		System.out.println("Pass!");
 		System.out.println("Error expected");
 		if(test.equipItemFromBag("no_item")) {
@@ -82,18 +82,18 @@ public class CharBagTest {
 		System.out.println("unequipItem(Item) test" + '\n');
 		System.out.println("No error expected");
 		test.equipItem(new Item("test_sword", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
-		test.unequipItem(test.getEquipedItem(InventorySlot.WEAPON));
+		test.unequipItem(test.getEquipedItem(CharInventory.InventorySlot.WEAPON).get());
 		System.out.println("Error expected");
 		test.unequipItem(new Item("no_item", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
 		test.showBag();
 		System.out.println('\n');
 		
-		System.out.println("unequipItem(InventorySlot) test" + '\n');
+		System.out.println("unequipItem(CharInventory.InventorySlot) test" + '\n');
 		System.out.println("No error expected");
 		test.equipItem(new Item("test_sword", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
-		test.unequipItem(InventorySlot.WEAPON);
+		test.unequipItem(CharInventory.InventorySlot.WEAPON);
 		System.out.println("Error expected");
-		test.unequipItem(InventorySlot.WEAPON);
+		test.unequipItem(CharInventory.InventorySlot.WEAPON);
 		test.showBag();
 		System.out.println('\n');
 		

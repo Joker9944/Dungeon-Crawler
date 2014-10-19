@@ -41,7 +41,7 @@ public class CharInventory extends Char {
 			return Optional.of(helpItem);
 		}
 		else {
-			System.out.println("Error removeItemInventroy(final InventorySlot slot)" + '\n' + "Slot es already empty.");
+			System.out.println("Error removeItemInventroy(final CharInventory.InventorySlot slot)" + '\n' + "Slot es already empty.");
 			return Optional.empty();
 		}
 	}
@@ -110,5 +110,13 @@ public class CharInventory extends Char {
 			}
 		}
 		return armor;
+	}
+	
+	public static enum InventorySlot {
+		HEAD(),
+		CHEST(),
+		HANDS(),
+		LEGS(),
+		WEAPON();
 	}
 }

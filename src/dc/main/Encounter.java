@@ -6,7 +6,6 @@ import java.util.Optional;
 import dc.character.Char;
 import dc.character.CharBag;
 import dc.character.CharInventory;
-import dc.character.InventorySlot;
 import dc.character.Race;
 import dc.character.RaceSuffix;
 import dc.item.Item;
@@ -30,8 +29,8 @@ public abstract class Encounter {
 		// Text encounter
 		//TODO Text.java
 		do {
-			if (turn == true) {
-				input = ConsoleReader.readString("What will you do?");
+			if (turn.equals(true)) {
+				input = ConsoleReader.readString("What will you do? ");
 				if (input.matches("^attack.*")) {
 					// Attack
 					if(input.matches("^attack")) {
@@ -51,7 +50,9 @@ public abstract class Encounter {
 				for(Char enemy: enemyList) {
 					//TODO AI
 					attack(player, enemy);
+					
 				}
+				turn = false;
 			}
 			for(Char enemy: enemyList) {
 				if(enemy.getHP() <= 0) {
@@ -81,7 +82,7 @@ public abstract class Encounter {
 				raceList.add(race);
 			}
 		}
-		while((unitResource > 0 || !raceList.isEmpty())) {
+		while((!raceList.isEmpty() && unitResource > 0)) {
 			Race race = raceList.get(RandomGenerator.randomInteger(0, raceList.size() - 1));
 			if(unitResource - race.getUnitCost() > 0) {
 				if(race.getHasName()) {
@@ -129,11 +130,12 @@ public abstract class Encounter {
 		if(attacker.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
 			damage = attacker.getRace().getDamage();
 		} else {
-			Optional<Item> helpContainer = ((CharInventory) attacker).getEquipedItem(InventorySlot.WEAPON);
+			Optional<Item> helpContainer = ((CharInventory) attacker).getEquipedItem(CharInventory.InventorySlot.WEAPON);
 			if(helpContainer.isPresent()) {
 				damage = helpContainer.get().getValue();
+			} else {
+				damage = 0D;
 			}
-			damage = 0D;
 		}
 		if(target.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
 			armor = target.getRace().getArmor();

@@ -1,10 +1,10 @@
 package dc.test;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import dc.character.CharInventory;
-import dc.character.InventorySlot;
 import dc.character.Race;
 import dc.item.Item;
 import dc.item.ItemCategory;
@@ -43,17 +43,17 @@ public class CharInventoryTest {
 		System.out.println("removeItemInventroy(Item) test" + '\n');
 		System.out.println("No error expected");
 		test.equipItem(new Item("test_sword", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
-		test.removeItemInventroy(test.getEquipedItem(InventorySlot.WEAPON));
+		test.removeItemInventroy(test.getEquipedItem(CharInventory.InventorySlot.WEAPON).get());
 		System.out.println("Error expected");
 		test.removeItemInventroy(new Item("no_item", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
 		System.out.println('\n');
 		
-		System.out.println("removeItemInventroy(InventorySlot) test" + '\n');
+		System.out.println("removeItemInventroy(CharInventory.InventorySlot) test" + '\n');
 		System.out.println("No error expected");
 		test.equipItem(new Item("test_sword", ItemCategory.NORMAL, ItemTyp.SWORD, 2D));
-		test.removeItemInventroy(InventorySlot.WEAPON);
+		test.removeItemInventroy(CharInventory.InventorySlot.WEAPON);
 		System.out.println("Error expected");
-		test.removeItemInventroy(InventorySlot.WEAPON);
+		test.removeItemInventroy(CharInventory.InventorySlot.WEAPON);
 		System.out.println('\n');
 	}
 }

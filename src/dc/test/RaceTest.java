@@ -1,15 +1,13 @@
 package dc.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import javax.crypto.ExemptionMechanismException;
+import org.junit.Test;
 
 import dc.character.Char;
 import dc.character.CharBag;
 import dc.character.CharInventory;
 import dc.character.Race;
-
-import org.junit.Test;
 
 public class RaceTest {
 
