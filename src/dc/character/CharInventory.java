@@ -7,7 +7,7 @@ import java.util.Set;
 
 import dc.item.Item;
 
-public class CharInventory extends Char {
+public class CharInventory extends CharBlank {
 
 	//TODO Implement Item Restrictions
 	

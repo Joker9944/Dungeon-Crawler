@@ -2,8 +2,8 @@ package dc.main;
 
 import java.util.Optional;
 
-import dc.character.CharBag;
 import dc.character.CharInventory;
+import dc.character.CharPlayer;
 import dc.character.Race;
 import dc.item.Item;
 import dc.utils.ConsoleReader;
@@ -12,13 +12,13 @@ import dc.utils.RandomGenerator;
 public class Menu {
 
 	private static Location direction[] = new Location[] {Location.CORRIDOR, Location.CORRIDOR, Location.CORRIDOR};
-	private static CharBag player;
+	private static CharPlayer player;
 	
 	static Encounter encounter;
 	
 	public static void main(String[] args) {
 		String input;
-
+		
 		System.out.println("Dungeon Crawler");
 		System.out.println("help for commands");
 		System.out.println("help <command> for help about command");
@@ -29,7 +29,7 @@ public class Menu {
 			input = ConsoleReader.readString("Select");
 			for (Race race: Race.values()) {
 				if(input.matches("(?i)^" + race.getRace() + "?")) {
-					player = (CharBag) Race.getNewChar(name, race);
+					player = (CharPlayer) Race.getNewChar(name, race);
 					for(Item item: player.getRace().getStartItems()) {
 						player.equipItem(item);
 					}

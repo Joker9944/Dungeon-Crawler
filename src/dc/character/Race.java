@@ -1,6 +1,7 @@
 package dc.character;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import dc.item.Item;
@@ -10,23 +11,23 @@ import dc.item.ItemTyp;
 public enum Race {
 
 	//Player Race
-	HUMAN("Human", 100D, 100D, true, RaceSuffix.PLAYER),
-	ELF("Elf", 50D, 150D, true, RaceSuffix.PLAYER),
-	ORK("Ork", 150D, 50D, true, RaceSuffix.PLAYER),
-	DWARF("Dwarf", 200D, 0D, false, RaceSuffix.PLAYER),
+	HUMAN("Human", 100D, 100D, true, Suffix.PLAYER),
+	ELF("Elf", 50D, 150D, true, Suffix.PLAYER),
+	ORK("Ork", 150D, 50D, true, Suffix.PLAYER),
+	DWARF("Dwarf", 200D, 0D, false, Suffix.PLAYER),
 	//Enemy Race
-	SPIDER("Spider", 50D, 0D, false, RaceSuffix.BLANK),
-	GOBLIN("Goblin", 70D, 0D, false, RaceSuffix.INVENTORY),
-	MERCENARY("Mercenary", 100D, 0D, false, RaceSuffix.BAG);
+	SPIDER("Spider", 50D, 0D, false, Suffix.BLANK),
+	GOBLIN("Goblin", 70D, 0D, false, Suffix.INVENTORY),
+	MERCENARY("Mercenary", 100D, 0D, false, Suffix.BAG);
 	
 
 	private String race;
 	private Double maxHP;
 	private Double maxMP;
 	private Boolean clm;
-	private RaceSuffix suffix;
+	private Suffix suffix;
 	
-	private Race(String race, Double maxHP, Double maxMP, Boolean clm, RaceSuffix suffix) {
+	private Race(String race, Double maxHP, Double maxMP, Boolean clm, Suffix suffix) {
 		this.race = race;
 		this.maxHP = maxHP;
 		this.maxMP = maxMP;
@@ -34,15 +35,18 @@ public enum Race {
 		this.suffix = suffix;
 	}
 	
-	public static Char getNewChar(String name, Race race) {
-		if(race.suffix.equals(RaceSuffix.BLANK)) {
-			return new Char(name, race);
+	public static CharBlank getNewChar(String name, Race race) {
+		if(race.suffix.equals(Suffix.BLANK)) {
+			return new CharBlank(name, race);
 		}
-		if(race.suffix.equals(RaceSuffix.INVENTORY)) {
+		if(race.suffix.equals(Suffix.INVENTORY)) {
 			return new CharInventory(name, race);
 		}
-		if(race.suffix.equals(RaceSuffix.BAG)||race.suffix.equals(RaceSuffix.PLAYER)) {
+		if(race.suffix.equals(Suffix.BAG)) {
 			return new CharBag(name, race);
+		}
+		if(race.suffix.equals(Suffix.PLAYER)) {
+			return new CharPlayer(name, race);
 		}
 		return null;
 	}
@@ -63,12 +67,12 @@ public enum Race {
 		return clm;
 	}
 
-	public RaceSuffix getSuffix() {
+	public Suffix getSuffix() {
 		return suffix;
 	}
 	
 	public Boolean isPlayerRace() {
-		if(suffix.equals(RaceSuffix.PLAYER)) {
+		if(suffix.equals(Suffix.PLAYER)) {
 			return true;
 		} else {
 			return false;
@@ -77,7 +81,7 @@ public enum Race {
 	
 	public Integer getMaxBagSlots(){
 		try {
-			Integer helpInt = (Integer) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.MAXBAGSLOTS);
+			Integer helpInt = (Integer) testIt(suffix, this).get(SuffixVariable.MAXBAGSLOTS);
 			if(helpInt.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -93,7 +97,7 @@ public enum Race {
 	@SuppressWarnings("unchecked")
 	public EnumSet<ItemCategory> getUsableCategorys() {
 		try {
-			EnumSet<ItemCategory> helpSet = (EnumSet<ItemCategory>) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.USABLECATEGORYS);
+			EnumSet<ItemCategory> helpSet = (EnumSet<ItemCategory>) testIt(suffix, this).get(SuffixVariable.USABLECATEGORYS);
 			if(helpSet.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -109,7 +113,7 @@ public enum Race {
 	@SuppressWarnings("unchecked")
 	public EnumSet<ItemTyp> getUsableTyps() {
 		try {
-			EnumSet<ItemTyp> helpSet = (EnumSet<ItemTyp>) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.USABLETYPS);
+			EnumSet<ItemTyp> helpSet = (EnumSet<ItemTyp>) testIt(suffix, this).get(SuffixVariable.USABLETYPS);
 			if(helpSet.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -125,7 +129,7 @@ public enum Race {
 	@SuppressWarnings("unchecked")
 	public HashSet<Item> getStartItems() {
 		try {
-			HashSet<Item> helpSet = (HashSet<Item>) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.STARTITEMS);
+			HashSet<Item> helpSet = (HashSet<Item>) testIt(suffix, this).get(SuffixVariable.STARTITEMS);
 			if(helpSet.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -140,7 +144,7 @@ public enum Race {
 	
 	public Integer getUnitCost() {
 		try {
-			Integer helpInt = (Integer) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.UNITCOST);
+			Integer helpInt = (Integer) testIt(suffix, this).get(SuffixVariable.UNITCOST);
 			if(helpInt.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -155,7 +159,7 @@ public enum Race {
 	
 	public Boolean getHasName() {
 		try {
-			Boolean helpBool = (Boolean) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.HASNAME);
+			Boolean helpBool = (Boolean) testIt(suffix, this).get(SuffixVariable.HASNAME);
 			if(helpBool.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -170,7 +174,7 @@ public enum Race {
 	
 	public Double getDamage() {
 		try {
-			Double helpDou = (Double) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.DAMAGE);
+			Double helpDou = (Double) testIt(suffix, this).get(SuffixVariable.DAMAGE);
 			if(helpDou.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -185,7 +189,7 @@ public enum Race {
 	
 	public Double getArmor() {
 		try {
-			Double helpDou = (Double) RaceSuffix.testIt(suffix, this).get(RaceSuffixVariableName.ARMOR);
+			Double helpDou = (Double) testIt(suffix, this).get(SuffixVariable.ARMOR);
 			if(helpDou.equals(null)) {
 				throw new NullPointerException();
 			}
@@ -197,4 +201,39 @@ public enum Race {
 			throw new NullPointerException();
 		}
 	}
+	
+	private static HashMap<SuffixVariable, Object> testIt(Suffix suffix, Race race) {
+		if(suffix.equals(Suffix.PLAYER)) {
+			return RacePlayer.getRace(race).getValues();
+		}
+		if(suffix.equals(Suffix.BLANK)) {
+			return RaceBlank.getRace(race).getValues();
+		}
+		if(suffix.equals(Suffix.BAG)) {
+			return RaceBag.getRace(race).getValues();
+		}
+		if(suffix.equals(Suffix.INVENTORY)) {
+			return RaceInventory.getRace(race).getValues();
+		}
+		return null;
+	}
+}
+
+enum Suffix {
+	PLAYER,		// For PlayerChar
+	BLANK,		// For Enemy
+	BAG,		// For Enemy
+	INVENTORY;	// For Enemy
+}
+
+enum SuffixVariable {
+	OWNER,				// Race
+	MAXBAGSLOTS,		// Integer
+	USABLECATEGORYS,	// EnumSet<ItemCategory>
+	USABLETYPS,			// ENumSet<ItemTyp>
+	HASNAME,			// Boolean
+	UNITCOST,			// Integer
+	DAMAGE,				// Double
+	ARMOR,				// Double
+	STARTITEMS			// HashSet<Item>
 }

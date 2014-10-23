@@ -1,13 +1,13 @@
 package dc.character;
 
-public class Char {
+public class CharBlank {
 
 	protected String name;
 	protected Race race;
 	protected Double HP;
 	protected Double MP;
 	
-	protected Char(String name, Race race) {
+	protected CharBlank(String name, Race race) {
 		this.name = name;
 		this.race = race;
 		HP = race.getMaxHP();

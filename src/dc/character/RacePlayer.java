@@ -46,13 +46,13 @@ enum RacePlayer {
 		return owner;
 	}
 	
-	public HashMap<RaceSuffixVariableName, Object> getValues() {
-		HashMap<RaceSuffixVariableName, Object> helpMap = new HashMap<RaceSuffixVariableName, Object>();
-		helpMap.put(RaceSuffixVariableName.OWNER, owner);
-		helpMap.put(RaceSuffixVariableName.MAXBAGSLOTS, maxBagSlots);
-		helpMap.put(RaceSuffixVariableName.USABLECATEGORYS, usableCategorys);
-		helpMap.put(RaceSuffixVariableName.USABLETYPS, usableTyps);
-		helpMap.put(RaceSuffixVariableName.STARTITEMS, startItems);
+	public HashMap<SuffixVariable, Object> getValues() {
+		HashMap<SuffixVariable, Object> helpMap = new HashMap<SuffixVariable, Object>();
+		helpMap.put(SuffixVariable.OWNER, owner);
+		helpMap.put(SuffixVariable.MAXBAGSLOTS, maxBagSlots);
+		helpMap.put(SuffixVariable.USABLECATEGORYS, usableCategorys);
+		helpMap.put(SuffixVariable.USABLETYPS, usableTyps);
+		helpMap.put(SuffixVariable.STARTITEMS, startItems);
 		return helpMap;
 	}
 }

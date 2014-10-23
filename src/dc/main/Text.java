@@ -1,5 +1,7 @@
 package dc.main;
 
+import dc.character.Race;
+
 public abstract class Text {
 
 	public static void move(Location[] location) {
@@ -31,21 +33,15 @@ public abstract class Text {
 			System.out.println("human"+'\t'+"elf"+'\t'+"ork"+'\t'+"dwarf");
 		}
 		else {
-			if(input.matches(".*human?")==true) {
-				System.out.println("Human" + '\n' + "HP: 100" + '\n' + "MP: 100");
-				System.out.println("(Info text in progress.)");
-			}
-			if(input.matches(".*elf?")==true) {
-				System.out.println("Elf" + '\n' + "HP: 50" + '\n' + "MP: 150");
-				System.out.println("(Info text in progress.)");
-			}
-			if(input.matches(".*ork?")==true) {
-				System.out.println("Ork" + '\n' + "HP: 150" + '\n' + "MP: 50");
-				System.out.println("(Info text in progress.)");
-			}
-			if(input.matches(".*dwarf?")==true) {
-				System.out.println("Dwarf" + '\n' + "HP: 200");
-				System.out.println("(Info text in progress.)");
+			for(Race race: Race.values()) {
+				if(input.matches("(?i).*" + race.getRace() + "?")) {
+					System.out.println(race.getRace() + '\n' + "HP: " + race.getMaxHP());
+					if(race.getClm()) {
+						System.out.println("MP: " + race.getMaxMP());
+						//TODO Text.java
+						System.out.println("(Info text in progress.)");
+					}
+				}
 			}
 		}
 	}

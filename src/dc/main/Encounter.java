@@ -3,11 +3,10 @@ package dc.main;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import dc.character.Char;
 import dc.character.CharBag;
+import dc.character.CharBlank;
 import dc.character.CharInventory;
 import dc.character.Race;
-import dc.character.RaceSuffix;
 import dc.item.Item;
 import dc.utils.ConsoleReader;
 import dc.utils.RandomGenerator;
@@ -18,7 +17,7 @@ public abstract class Encounter {
 	private static Boolean turn;
 					// true=Player
 					// false=Creeps
-	private static ArrayList<Char> enemyList;
+	private static ArrayList<CharBlank> enemyList;
 	
 	public static void encounter(Location location, CharBag player) {
 		System.out.println("Encounter");
@@ -47,14 +46,14 @@ public abstract class Encounter {
 					// TODO Flee
 				}
 			} else {
-				for(Char enemy: enemyList) {
+				for(CharBlank enemy: enemyList) {
 					//TODO AI
 					attack(player, enemy);
 					
 				}
 				turn = false;
 			}
-			for(Char enemy: enemyList) {
+			for(CharBlank enemy: enemyList) {
 				if(enemy.getHP() <= 0) {
 					enemyList.remove(enemy);
 				}
@@ -73,8 +72,8 @@ public abstract class Encounter {
 		}
 	}
 	
-	private static ArrayList<Char> generateEnemys() {
-		ArrayList<Char> enemyList = new ArrayList<Char>();
+	private static ArrayList<CharBlank> generateEnemys() {
+		ArrayList<CharBlank> enemyList = new ArrayList<CharBlank>();
 		ArrayList<Race> raceList = new ArrayList<Race>();
 		Integer unitResource = 10;
 		for(Race race: Race.values()) {
@@ -91,7 +90,7 @@ public abstract class Encounter {
 				} else {
 					Integer count = 0;
 					if(!enemyList.isEmpty()) {
-						for(Char enemy: enemyList){
+						for(CharBlank enemy: enemyList){
 							if(enemy.getName().matches("(?i)" + race.getRace() + ".*")) {
 								count++;
 							}
@@ -109,13 +108,13 @@ public abstract class Encounter {
 	
 	public static void statusExtension() {
 		System.out.println('\n' + "Enemys:");
-		for(Char enemy: enemyList) {
+		for(CharBlank enemy: enemyList) {
 			System.out.println(enemy.getName());
 		}
 	}
 	
-	private static Boolean attack(Char attacker, String target) {
-		for(Char enemy: enemyList) {
+	private static Boolean attack(CharBlank attacker, String target) {
+		for(CharBlank enemy: enemyList) {
 			if(target.matches("(?i).*" + enemy.getName() + "?")) {
 				attack(attacker, enemy);
 				return true;
@@ -124,10 +123,10 @@ public abstract class Encounter {
 		return false;
 	}
 
-	private static void attack(Char attacker, Char target) {
+	private static void attack(CharBlank attacker, CharBlank target) {
 		Double damage;
 		Double armor;
-		if(attacker.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
+		if(attacker.getClass().equals(CharBlank.class)) {
 			damage = attacker.getRace().getDamage();
 		} else {
 			Optional<Item> helpContainer = ((CharInventory) attacker).getEquipedItem(CharInventory.InventorySlot.WEAPON);
@@ -137,7 +136,7 @@ public abstract class Encounter {
 				damage = 0D;
 			}
 		}
-		if(target.getRace().getSuffix().equals(RaceSuffix.BLANK)) {
+		if(target.getClass().equals(CharBlank.class)) {
 			armor = target.getRace().getArmor();
 		} else {
 			armor = ((CharInventory) target).getArmor();

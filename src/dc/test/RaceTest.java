@@ -4,8 +4,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import dc.character.Char;
 import dc.character.CharBag;
+import dc.character.CharBlank;
 import dc.character.CharInventory;
 import dc.character.Race;
 
@@ -44,7 +44,7 @@ public class RaceTest {
 	public void getMaxBagSlotsTest() {
 		System.out.println("getMaxBagSlotsTest" + '\n');
 		CharBag test1 = (CharBag) Race.getNewChar("test_char", Race.HUMAN);
-		Char test2 = Race.getNewChar("test_char", Race.SPIDER);
+		CharBlank test2 = Race.getNewChar("test_char", Race.SPIDER);
 		try {
 			System.out.println("Try to get max slots from Char with slot");
 			System.out.println("Max slots: " + test1.getRace().getMaxBagSlots());
@@ -67,7 +67,7 @@ public class RaceTest {
 	public void getUnitCostTest() {
 		System.out.println("getUnitCostTest" + '\n');
 		System.out.println("Init Chars / no Errors expected");
-		Char test1 = Race.getNewChar("test_char", Race.SPIDER);
+		CharBlank test1 = Race.getNewChar("test_char", Race.SPIDER);
 		CharInventory test2 = (CharInventory) Race.getNewChar("test_char", Race.GOBLIN);
 		CharBag test3 = (CharBag) Race.getNewChar("test_char", Race.MERCENARY);
 		CharBag test4 = (CharBag) Race.getNewChar("test_char", Race.HUMAN);

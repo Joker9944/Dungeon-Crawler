@@ -39,13 +39,13 @@ enum RaceInventory {
 		return owner;
 	}
 	
-	public HashMap<RaceSuffixVariableName, Object> getValues() {
-		HashMap<RaceSuffixVariableName, Object> helpMap = new HashMap<RaceSuffixVariableName, Object>();
-		helpMap.put(RaceSuffixVariableName.OWNER, owner);
-		helpMap.put(RaceSuffixVariableName.HASNAME, hasName);
-		helpMap.put(RaceSuffixVariableName.UNITCOST, unitCost);
-		helpMap.put(RaceSuffixVariableName.USABLECATEGORYS, usableCategorys);
-		helpMap.put(RaceSuffixVariableName.USABLETYPS, usableTyps);
+	public HashMap<SuffixVariable, Object> getValues() {
+		HashMap<SuffixVariable, Object> helpMap = new HashMap<SuffixVariable, Object>();
+		helpMap.put(SuffixVariable.OWNER, owner);
+		helpMap.put(SuffixVariable.HASNAME, hasName);
+		helpMap.put(SuffixVariable.UNITCOST, unitCost);
+		helpMap.put(SuffixVariable.USABLECATEGORYS, usableCategorys);
+		helpMap.put(SuffixVariable.USABLETYPS, usableTyps);
 		return helpMap;
 	}
 }

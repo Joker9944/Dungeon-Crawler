@@ -5,7 +5,7 @@ public class Item {
 	//TODO Implement Consumebels (Potions)
 	
 	private String name;
-	private String description = "lazors!! :<";
+	private String description = "lazors!! :<"; //TODO Item description
 	private ItemCategory category;
 	private ItemTyp typ;
 	private Double value;
